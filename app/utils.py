@@ -25,7 +25,7 @@ FFMPEG_DIR = "ffmpeg"
 def initialize_driver():
     """Initialize the WebDriver with Chrome options."""
     options = Options()
-    #options.add_argument("--headless")  # Para rodar em modo headless
+    options.add_argument("--headless")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("start-maximized")
     options.add_argument("disable-infobars")
@@ -100,15 +100,18 @@ def update_chromedriver(url):
     os.makedirs(CHROMEDRIVER_DIR, exist_ok=True)
     zip_path = os.path.join(CHROMEDRIVER_DIR, "chromedriver.zip")
     response = requests.get(url, stream=True)
-    if response.status_code == 200:
-        with open(zip_path, "wb") as file:
-            file.write(response.content)
-        with zipfile.ZipFile(zip_path, "r") as zip_ref:
-            zip_ref.extractall(CHROMEDRIVER_DIR)
-        os.remove(zip_path)
-        print("ChromeDriver successfully updated.")
-    else:
-        raise RuntimeError("Failed to download ChromeDriver.")
+    try:
+        if response.status_code == 200:
+            with open(zip_path, "wb") as file:
+                file.write(response.content)
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                zip_ref.extractall(CHROMEDRIVER_DIR)
+            os.remove(zip_path)
+            print("ChromeDriver successfully updated.")
+        else:
+            raise RuntimeError("Failed to download ChromeDriver.")
+    except Exception as e:
+        print(f"Failed to update ChromeDriver: {e}")
 
 
 def get_os_type():

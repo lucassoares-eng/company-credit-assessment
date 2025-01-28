@@ -193,7 +193,7 @@ def solve_recaptcha():
     except Exception as e:
         raise RuntimeError(f"Error solving reCAPTCHA: {str(e)}")
     
-def check_recaptcha(verbose=True):
+def check_recaptcha():
     driver = manager.get_driver()
     try:
         wait = WebDriverWait(driver, 5)
@@ -212,8 +212,7 @@ def check_recaptcha(verbose=True):
         query_params = parse_qs(urlparse(iframe_src).query)
         # Return the 'sitekey' value
         site_key = query_params.get('k', [None])[0]
-        if verbose:
-            print("ReCAPTCHA detected!")
+        print("ReCAPTCHA detected!")
         return site_key
     except:
         return False

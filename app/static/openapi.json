@@ -1,0 +1,179 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Credit Analysis API",
+      "description": "API for performing various credit analysis tasks like fetching CNPJ data, checking reputation, and more.",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/cnpj": {
+        "get": {
+          "summary": "Fetches CNPJ information for a company.",
+          "parameters": [
+            {
+              "name": "cnpj",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "12345678000195"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "CNPJ information"
+            },
+            "400": {
+              "description": "CNPJ parameter is required"
+            }
+          }
+        }
+      },
+      "/reputation": {
+        "get": {
+          "summary": "Fetches the reputation of a company on Reclame Aqui.",
+          "parameters": [
+            {
+              "name": "company_name",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "SomeCompany"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Company reputation"
+            },
+            "400": {
+              "description": "Company name parameter is required"
+            }
+          }
+        }
+      },
+      "/protests": {
+        "get": {
+          "summary": "Checks for protests associated with a company using its CNPJ.",
+          "parameters": [
+            {
+              "name": "cnpj",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "12345678000195"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Protest information"
+            },
+            "400": {
+              "description": "CNPJ parameter is required"
+            }
+          }
+        }
+      },
+      "/instagram-followers": {
+        "get": {
+          "summary": "Fetches the number of Instagram followers for a company.",
+          "parameters": [
+            {
+              "name": "company_name",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "SomeCompany"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Instagram followers count"
+            },
+            "400": {
+              "description": "Company name parameter is required"
+            }
+          }
+        }
+      },
+      "/facebook-followers": {
+        "get": {
+          "summary": "Fetches the number of Facebook followers for a company.",
+          "parameters": [
+            {
+              "name": "company_name",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "SomeCompany"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Facebook followers count"
+            },
+            "400": {
+              "description": "Company name parameter is required"
+            }
+          }
+        }
+      },
+      "/government-contracts": {
+        "get": {
+          "summary": "Fetches whether a company has any government contracts by its CNPJ.",
+          "parameters": [
+            {
+              "name": "cnpj",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "12345678000195"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Government contracts information"
+            },
+            "400": {
+              "description": "CNPJ parameter is required"
+            }
+          }
+        }
+      },
+      "/cnpj-data": {
+        "get": {
+          "summary": "Fetches detailed CNPJ data from an external service.",
+          "parameters": [
+            {
+              "name": "cnpj",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "12345678000195"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Detailed CNPJ data"
+            },
+            "400": {
+              "description": "CNPJ parameter is required"
+            }
+          }
+        }
+      }
+    }
+  }
+  
