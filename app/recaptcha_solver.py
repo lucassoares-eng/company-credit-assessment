@@ -101,4 +101,5 @@ class ReCAPTCHASolver:
             driver.switch_to.default_content()
 
         except Exception as e:
+            driver.switch_to.default_content()
             raise RuntimeError(f"Error solving reCAPTCHA: {str(e)}")
