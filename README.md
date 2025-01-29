@@ -4,7 +4,7 @@ This API provides several functionalities to obtain data about companies, includ
 
 ## API Endpoints
 
-### 1. **`/cnpj`** - Displays CNPJ information
+### 1. **`/company-data`** - Displays CNPJ information
 - **Method**: `GET`
 - **Parameter**: `cnpj` (required) – The CNPJ of the company.
 - **Description**: Returns detailed information about the company based on its CNPJ, including data about the company, protests, government contracts, social media, etc.
