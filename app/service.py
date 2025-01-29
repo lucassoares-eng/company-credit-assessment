@@ -16,10 +16,10 @@ from .client import DriverManager
 from .recaptcha_solver import ReCAPTCHASolver
 from .utils import format_cnpj
 
-# Desabilitar avisos de solicitações HTTPS não verificadas
+# Disable warnings for unverified HTTPS requests
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Carregar variáveis do arquivo .env
+# Load variables from the .env file
 load_dotenv()
 
 INSTAGRAM_COOKIES_FILE = "instagram_cookies.pkl"

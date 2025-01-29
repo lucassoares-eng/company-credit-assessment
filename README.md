@@ -118,8 +118,17 @@ This module provides an automated way to solve Google reCAPTCHA challenges using
 
 ### Usage
 ```bash
+from selenium import webdriver
 from recaptcha_solver import ReCAPTCHASolver
 
+# Selenium driver setup
+driver = webdriver.Chrome()  # or webdriver.Firefox(), depending on the browser you use
+
+# Access the URL containing the reCAPTCHA
+url = 'https://example.com'
+driver.get(url)
+
+# Solve the reCAPTCHA
 solver = ReCAPTCHASolver()
 solver.solve_recaptcha(driver)
 ```
@@ -133,7 +142,7 @@ To use the solve_recaptcha function, make sure to send the driver (Selenium WebD
 To make a request to check information for a company with CNPJ `12345678000195`, you can do the following:
 
 ```bash
-GET /cnpj?cnpj=12345678000195
+GET /company-data?cnpj=12345678000195
 ```
 
 ## Requirements
