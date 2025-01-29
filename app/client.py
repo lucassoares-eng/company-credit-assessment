@@ -1,7 +1,7 @@
 import os
 import random
 import time
-from app.utils import (
+from .utils import (
     initialize_driver,
     load_cookies,
     prompt_login,

@@ -12,9 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from unidecode import unidecode
 import urllib3
-from app.client import DriverManager
-from app.recaptcha_solver import ReCAPTCHASolver
-from app.utils import format_cnpj
+from .client import DriverManager
+from .recaptcha_solver import ReCAPTCHASolver
+from .utils import format_cnpj
 
 # Desabilitar avisos de solicitações HTTPS não verificadas
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

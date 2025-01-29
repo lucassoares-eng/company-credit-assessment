@@ -114,6 +114,7 @@ This module provides an automated way to solve Google reCAPTCHA challenges using
 - Uses speech-to-text to decode audio challenges
 - Handles reCAPTCHA v2 (audio challenges)
 - Verifies the installation of FFmpeg and configures it automatically
+- Works with Selenium and requires the driver with the reCAPTCHA iframe to be provided
 
 ### Usage
 ```bash
@@ -122,6 +123,10 @@ from recaptcha_solver import ReCAPTCHASolver
 solver = ReCAPTCHASolver()
 solver.solve_recaptcha(driver)
 ```
+
+### Notes
+
+To use the solve_recaptcha function, make sure to send the driver (Selenium WebDriver instance) in which the reCAPTCHA iframe is present.
 
 ## Example of using the API
 
