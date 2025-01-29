@@ -141,6 +141,21 @@ def check_and_setup_ffmpeg():
     print('FFmpeg successfully configured!')
 
 
+def prompt_login(instagram_url, instagram_cookies_file):
+    """Prompt user to log in and save cookies."""
+    # Start a new driver without the --headless argument
+    options = webdriver.ChromeOptions()
+    driver = webdriver.Chrome(options=options)
+    # Access the Instagram URL
+    driver.get(instagram_url)
+    # Prompt the user to log in manually
+    input("Log in to Instagram and press ENTER to continue...")
+    # After login, save the cookies
+    save_cookies(driver, instagram_cookies_file)
+    # Close the driver
+    driver.quit()
+
+
 def convert_to_wav(input_path, output_path="converted_audio.wav"):
     """Convert audio to WAV format."""
     audio = AudioSegment.from_file(input_path)

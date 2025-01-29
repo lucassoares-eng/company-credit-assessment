@@ -2,13 +2,15 @@
     "openapi": "3.0.0",
     "info": {
       "title": "Credit Analysis API",
-      "description": "API for performing various credit analysis tasks like fetching CNPJ data, checking reputation, and more.",
+      "description": "API for performing various credit analysis tasks like fetching CNPJ data, checking reputation, and more. This API integrates with external services to provide comprehensive company information, including social media metrics, government contracts, and legal protests.",
       "version": "1.0.0"
     },
     "paths": {
-      "/cnpj": {
+      "/cnpj-data": {
         "get": {
           "summary": "Fetches CNPJ information for a company.",
+          "description": "Retrieves detailed information about a company using its CNPJ, including registration status, main activity, and social capital.",
+          "operationId": "getCnpjData",
           "parameters": [
             {
               "name": "cnpj",
@@ -17,15 +19,42 @@
               "schema": {
                 "type": "string",
                 "example": "12345678000195"
-              }
+              },
+              "description": "The CNPJ number of the company (14 digits, without formatting)."
             }
           ],
           "responses": {
             "200": {
-              "description": "CNPJ information"
+              "description": "CNPJ information retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "cnpj": "12345678000195",
+                    "name": "Example Company Ltda",
+                    "state": "SP",
+                    "status": "ATIVA",
+                    "last_update": "01/01/2023",
+                    "type": "MATRIZ",
+                    "registration_status": "OK",
+                    "main_activity_code": "62.01-5-00",
+                    "main_activity": "Desenvolvimento de programas de computador sob encomenda",
+                    "size": "MEDIA",
+                    "social_capital": 1000000.0
+                  }
+                }
+              }
             },
             "400": {
-              "description": "CNPJ parameter is required"
+              "description": "Invalid CNPJ format or missing parameter."
+            },
+            "404": {
+              "description": "CNPJ not found in the database."
+            },
+            "429": {
+              "description": "Too many requests. Please wait before retrying."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
@@ -33,6 +62,8 @@
       "/reputation": {
         "get": {
           "summary": "Fetches the reputation of a company on Reclame Aqui.",
+          "description": "Retrieves the reputation score of a company based on its name, as rated by users on the Reclame Aqui platform.",
+          "operationId": "getCompanyReputation",
           "parameters": [
             {
               "name": "company_name",
@@ -40,16 +71,31 @@
               "required": true,
               "schema": {
                 "type": "string",
-                "example": "SomeCompany"
-              }
+                "example": "ExampleCompany"
+              },
+              "description": "The name of the company as registered on Reclame Aqui."
             }
           ],
           "responses": {
             "200": {
-              "description": "Company reputation"
+              "description": "Company reputation retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "company_name": "ExampleCompany",
+                    "reputation_score": 4.5
+                  }
+                }
+              }
             },
             "400": {
-              "description": "Company name parameter is required"
+              "description": "Company name parameter is required."
+            },
+            "404": {
+              "description": "Company not found on Reclame Aqui."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
@@ -57,6 +103,8 @@
       "/protests": {
         "get": {
           "summary": "Checks for protests associated with a company using its CNPJ.",
+          "description": "Searches for legal protests registered against a company using its CNPJ. Returns the total number of protests and the aggregated value.",
+          "operationId": "getCompanyProtests",
           "parameters": [
             {
               "name": "cnpj",
@@ -65,15 +113,31 @@
               "schema": {
                 "type": "string",
                 "example": "12345678000195"
-              }
+              },
+              "description": "The CNPJ number of the company (14 digits, without formatting)."
             }
           ],
           "responses": {
             "200": {
-              "description": "Protest information"
+              "description": "Protest information retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "cnpj": "12345678000195",
+                    "total_protests": 2,
+                    "total_protested_value": 15000.0
+                  }
+                }
+              }
             },
             "400": {
-              "description": "CNPJ parameter is required"
+              "description": "Invalid CNPJ format or missing parameter."
+            },
+            "404": {
+              "description": "No protests found for the given CNPJ."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
@@ -81,6 +145,8 @@
       "/instagram-followers": {
         "get": {
           "summary": "Fetches the number of Instagram followers for a company.",
+          "description": "Retrieves the number of followers on the company's official Instagram page.",
+          "operationId": "getInstagramFollowers",
           "parameters": [
             {
               "name": "company_name",
@@ -88,16 +154,32 @@
               "required": true,
               "schema": {
                 "type": "string",
-                "example": "SomeCompany"
-              }
+                "example": "ExampleCompany"
+              },
+              "description": "The name of the company as used in its Instagram handle."
             }
           ],
           "responses": {
             "200": {
-              "description": "Instagram followers count"
+              "description": "Instagram followers count retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "company_name": "ExampleCompany",
+                    "instagram_url": "https://www.instagram.com/examplecompany",
+                    "followers_count": 15000
+                  }
+                }
+              }
             },
             "400": {
-              "description": "Company name parameter is required"
+              "description": "Company name parameter is required."
+            },
+            "404": {
+              "description": "Company Instagram page not found."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
@@ -105,6 +187,8 @@
       "/facebook-followers": {
         "get": {
           "summary": "Fetches the number of Facebook followers for a company.",
+          "description": "Retrieves the number of followers on the company's official Facebook page.",
+          "operationId": "getFacebookFollowers",
           "parameters": [
             {
               "name": "company_name",
@@ -112,16 +196,32 @@
               "required": true,
               "schema": {
                 "type": "string",
-                "example": "SomeCompany"
-              }
+                "example": "ExampleCompany"
+              },
+              "description": "The name of the company as used in its Facebook handle."
             }
           ],
           "responses": {
             "200": {
-              "description": "Facebook followers count"
+              "description": "Facebook followers count retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "company_name": "ExampleCompany",
+                    "facebook_url": "https://www.facebook.com/examplecompany",
+                    "followers_count": 25000
+                  }
+                }
+              }
             },
             "400": {
-              "description": "Company name parameter is required"
+              "description": "Company name parameter is required."
+            },
+            "404": {
+              "description": "Company Facebook page not found."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
@@ -129,6 +229,8 @@
       "/government-contracts": {
         "get": {
           "summary": "Fetches whether a company has any government contracts by its CNPJ.",
+          "description": "Checks if the company has any contracts registered with the government using its CNPJ.",
+          "operationId": "getGovernmentContracts",
           "parameters": [
             {
               "name": "cnpj",
@@ -137,22 +239,39 @@
               "schema": {
                 "type": "string",
                 "example": "12345678000195"
-              }
+              },
+              "description": "The CNPJ number of the company (14 digits, without formatting)."
             }
           ],
           "responses": {
             "200": {
-              "description": "Government contracts information"
+              "description": "Government contracts information retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "cnpj": "12345678000195",
+                    "has_government_contracts": true
+                  }
+                }
+              }
             },
             "400": {
-              "description": "CNPJ parameter is required"
+              "description": "Invalid CNPJ format or missing parameter."
+            },
+            "404": {
+              "description": "No government contracts found for the given CNPJ."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
       },
-      "/cnpj-data": {
+      "/company-data": {
         "get": {
           "summary": "Fetches detailed CNPJ data from an external service.",
+          "description": "Retrieves comprehensive company data from an external service using its CNPJ, including legal, financial, and operational details.",
+          "operationId": "getDetailedCnpjData",
           "parameters": [
             {
               "name": "cnpj",
@@ -161,19 +280,52 @@
               "schema": {
                 "type": "string",
                 "example": "12345678000195"
-              }
+              },
+              "description": "The CNPJ number of the company (14 digits, without formatting)."
             }
           ],
           "responses": {
             "200": {
-              "description": "Detailed CNPJ data"
+              "description": "Detailed CNPJ data retrieved successfully.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "cnpj": "12345678000195",
+                    "name": "Example Company Ltda",
+                    "state": "SP",
+                    "status": "ATIVA",
+                    "last_update": "01/01/2023",
+                    "type": "MATRIZ",
+                    "registration_status": "OK",
+                    "main_activity_code": "62.01-5-00",
+                    "main_activity": "Desenvolvimento de programas de computador sob encomenda",
+                    "size": "MEDIA",
+                    "social_capital": 1000000.0,
+                    "protests": 2,
+                    "protested_value": 15000.0,
+                    "government_contracts": true,
+                    "instagram_url": "https://www.instagram.com/examplecompany",
+                    "instagram_followers": 15000,
+                    "facebook_url": "https://www.facebook.com/examplecompany",
+                    "facebook_followers": 25000
+                  }
+                }
+              }
             },
             "400": {
-              "description": "CNPJ parameter is required"
+              "description": "Invalid CNPJ format or missing parameter."
+            },
+            "404": {
+              "description": "CNPJ not found in the database."
+            },
+            "429": {
+              "description": "Too many requests. Please wait before retrying."
+            },
+            "500": {
+              "description": "Internal server error."
             }
           }
         }
       }
     }
   }
-  

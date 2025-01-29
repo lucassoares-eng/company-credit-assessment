@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import random
 import re
@@ -125,21 +125,41 @@ def pesquisaprotesto_login():
             )
             driver.execute_script("arguments[0].click();", send_code_button)
 
-            # Wait for code input fields
-            inputs = wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, "//input[@maxlength='1' and @class='token-login-input']"))
-            )
+            last_resend_time = datetime.now()
+            while True:
 
-            # Ask for user input
-            code = input("Enter the 6-digit code received via email: ")
-            if len(code) != 6:
-                raise ValueError("The code must be exactly 6 digits.")
+                # Wait for code input fields
+                inputs = wait.until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//input[@maxlength='1' and @class='token-login-input']"))
+                )
 
-            # Fill each input field
-            for i, input_field in enumerate(inputs):
-                input_field.clear()
-                input_field.send_keys(code[i])
-            print(f"Code '{code}' entered.")
+                # Ask for user input
+                code = input("Enter the 6-digit code received via email (or type 0 to resend the code): ")
+                
+                if code == '0':
+                    current_time = datetime.now()
+                    if last_resend_time and (current_time - last_resend_time) < timedelta(minutes=2):
+                        remaining_time = (last_resend_time + timedelta(minutes=2) - current_time).total_seconds()
+                        print(f"Please wait {int(remaining_time)} seconds before resending the code.")
+                        continue
+                    last_resend_time = current_time
+                    print("Resending code...")
+                    # Click "Resend Code"
+                    resend_code_button = wait.until(
+                        EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'link') and contains(text(), 'Reenviar código')]"))
+                    )
+                    driver.execute_script("arguments[0].click();", resend_code_button)
+                    continue  # Resend the code and prompt again
+
+                if len(code) == 6:
+                    # Fill each input field
+                    for i, input_field in enumerate(inputs):
+                        input_field.clear()
+                        input_field.send_keys(code[i])
+                    print(f"Code '{code}' entered.")
+                    break  # Exit the loop if a valid code is entered
+                else:
+                    print("Invalid code. Please enter a 6-digit numeric code.")
 
             # Confirm code
             confirm_button = wait.until(EC.element_to_be_clickable((By.ID, "btnConfirmaToken2fa")))

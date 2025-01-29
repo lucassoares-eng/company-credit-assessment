@@ -122,7 +122,7 @@ GET /cnpj?cnpj=12345678000195
 
 1. **Clone the repository**:
     ```bash
-    git clone <REPOSITORY_URL>
+    git clone https://github.com/lucassoares-eng/company-credit-assessment
     ```
 
 2. **Create and activate a virtual environment**:

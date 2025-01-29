@@ -5,6 +5,7 @@ from app.utils import (
     check_and_setup_ffmpeg,
     initialize_driver,
     load_cookies,
+    prompt_login,
     save_cookies,
     get_chrome_version,
     get_chromedriver_url,
@@ -41,9 +42,7 @@ class DriverManager:
 
     def _prompt_login(self):
         """Prompt user to log in and save cookies."""
-        self.driver.get(self.instagram_url)
-        input("Log in to Instagram and press ENTER to continue...")
-        save_cookies(self.driver, self.instagram_cookies_file)
+        prompt_login(self.instagram_url, self.instagram_cookies_file)
 
     def restart_driver(self):
         """Restart the WebDriver with a random delay."""
