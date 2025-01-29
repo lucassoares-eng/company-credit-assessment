@@ -104,6 +104,25 @@ This API provides several functionalities to obtain data about companies, includ
     }
     ```
 
+## ReCAPTCHA Solver
+
+This module provides an automated way to solve Google reCAPTCHA challenges using audio-based recognition. It downloads the reCAPTCHA audio challenge, transcribes it using speech-to-text services, and submits the response automatically.
+
+### Features
+
+- Automates solving of Google reCAPTCHA challenges
+- Uses speech-to-text to decode audio challenges
+- Handles reCAPTCHA v2 (audio challenges)
+- Verifies the installation of FFmpeg and configures it automatically
+
+### Usage
+```bash
+from recaptcha_solver import ReCAPTCHASolver
+
+solver = ReCAPTCHASolver()
+solver.solve_recaptcha(driver)
+```
+
 ## Example of using the API
 
 To make a request to check information for a company with CNPJ `12345678000195`, you can do the following:
@@ -115,8 +134,17 @@ GET /cnpj?cnpj=12345678000195
 ## Requirements
 
 - Python 3.x
-- Flask
-- Additional dependencies (like requests, selenium, etc.) that you can install with:
+- flask==3.0.3
+- flask-swagger-ui==4.11.1
+- requests==2.31.0
+- selenium==4.27.1
+- speechrecognition==3.14.0
+- pandas==2.1.1
+- python-dotenv==1.0.0
+- numpy==1.26.0
+- unidecode==1.3.8
+- urllib3==2.1.0
+- tqdm==4.66.1
 
 ## How to Run the Project
 
@@ -136,13 +164,36 @@ GET /cnpj?cnpj=12345678000195
     pip install -r requirements.txt
     ```
 
-4. **Run the Flask server**:
+4. **Set up environment variables**:
+    - Create a `.env` file in the root directory of the project.
+    - Add the following variables to the `.env` file:
+      ```plaintext
+      PESQUISAPROTESTO_USER=your_username
+      PESQUISAPROTESTO_PASSWORD=your_password
+      PORTAL_TRANSPARENCIA_API_KEY=your_api_key
+      ```
+    - **PESQUISAPROTESTO_USER** and **PESQUISAPROTESTO_PASSWORD**: 
+      - Visit [Pesquisa Protesto](https://www.pesquisaprotesto.com.br/cadastro) to create an account and obtain your credentials.
+    - **PORTAL_TRANSPARENCIA_API_KEY**:
+      - Visit [Portal da Transparência](https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email) to register your email and generate an API key.
+
+5. **Run the Flask server**:
     ```bash
     python app.py
     ```
 
-5. **Access the API**:
+6. **Access the API**:
     Open your browser and visit `http://localhost:5000` to interact with the API.
+
+7. **First-time Instagram login**:
+    - On the first run, the system will prompt you to log in to Instagram to allow the API to fetch the number of followers for the companies being analyzed.
+    - After the first login, the system will save the login cookies locally, so you won't need to log in again on subsequent runs.
+
+---
+
+### Notes:
+- Ensure that the `.env` file is correctly configured with the required credentials.
+- The Instagram login is necessary only once, as the cookies are stored locally for future use.
 
 ## **Contributions**
 

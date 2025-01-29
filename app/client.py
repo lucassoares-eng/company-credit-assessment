@@ -2,7 +2,6 @@ import os
 import random
 import time
 from app.utils import (
-    check_and_setup_ffmpeg,
     initialize_driver,
     load_cookies,
     prompt_login,
@@ -19,7 +18,6 @@ class DriverManager:
         self.instagram_url = instagram_url
         self.chrome_version = get_chrome_version()
         update_chromedriver(get_chromedriver_url(self.chrome_version))
-        check_and_setup_ffmpeg()
         self._setup_driver()
 
     def _setup_driver(self):

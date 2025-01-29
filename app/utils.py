@@ -6,20 +6,9 @@ import zipfile
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-import speech_recognition as sr
-
-import warnings
-# Suprimir o aviso específico emitido pelo pydub
-warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", category=RuntimeWarning)
-
-from pydub import AudioSegment
-
 
 # General Constants
-FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 CHROMEDRIVER_DIR = "chromedriver"
-FFMPEG_DIR = "ffmpeg"
-
 
 # Driver Management
 def initialize_driver():
@@ -40,7 +29,6 @@ def initialize_driver():
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
-
 def load_cookies(driver, file_path):
     """Load cookies into the browser session."""
     try:
@@ -56,7 +44,6 @@ def load_cookies(driver, file_path):
     except Exception as e:
         print(f"Error loading cookies: {e}")
 
-
 def save_cookies(driver, file_path):
     """Save cookies from the browser session."""
     try:
@@ -65,7 +52,6 @@ def save_cookies(driver, file_path):
         print("Cookies successfully saved.")
     except Exception as e:
         print(f"Error saving cookies: {e}")
-
 
 # ChromeDriver Management
 def get_chrome_version():
@@ -76,7 +62,6 @@ def get_chrome_version():
         ).read().split()[-1]
     except Exception:
         raise RuntimeError("Unable to retrieve Chrome version.")
-
 
 def get_chromedriver_url(version):
     """Get the download URL for the corresponding ChromeDriver version."""
@@ -93,7 +78,6 @@ def get_chromedriver_url(version):
                     if download["platform"] == os_type:
                         return download["url"]
     raise RuntimeError(f"Unable to find ChromeDriver for version {version}.")
-
 
 def update_chromedriver(url):
     """Download and update ChromeDriver."""
@@ -113,33 +97,10 @@ def update_chromedriver(url):
     except Exception as e:
         print(f"Failed to update ChromeDriver: {e}")
 
-
 def get_os_type():
     """Identify the OS type for ChromeDriver compatibility."""
     system = platform.system().lower()
     return {"windows": "win64", "linux": "linux64", "darwin": "mac64"}.get(system, None)
-
-
-# FFmpeg and Audio Utilities
-def check_and_setup_ffmpeg():
-    """Download and configure FFmpeg if not already installed."""
-    ffmpeg_exe = os.path.join(FFMPEG_DIR, "bin", "ffmpeg.exe")
-    if not os.path.exists(ffmpeg_exe):
-        print("Downloading FFmpeg...")
-        zip_path = os.path.join(FFMPEG_DIR, "ffmpeg.zip")
-        os.makedirs(FFMPEG_DIR, exist_ok=True)
-        response = requests.get(FFMPEG_URL)
-        with open(zip_path, "wb") as file:
-            file.write(response.content)
-        with zipfile.ZipFile(zip_path, "r") as zip_ref:
-            zip_ref.extractall(FFMPEG_DIR)
-        os.remove(zip_path)
-    if not os.path.exists(ffmpeg_exe):
-        raise FileNotFoundError("FFmpeg setup failed.")
-    os.environ["PATH"] += os.pathsep + os.path.dirname(ffmpeg_exe)
-    AudioSegment.converter = ffmpeg_exe
-    print('FFmpeg successfully configured!')
-
 
 def prompt_login(instagram_url, instagram_cookies_file):
     """Prompt user to log in and save cookies."""
@@ -154,32 +115,7 @@ def prompt_login(instagram_url, instagram_cookies_file):
     save_cookies(driver, instagram_cookies_file)
     # Close the driver
     driver.quit()
-
-
-def convert_to_wav(input_path, output_path="converted_audio.wav"):
-    """Convert audio to WAV format."""
-    audio = AudioSegment.from_file(input_path)
-    audio.export(output_path, format="wav")
-    return output_path
-
-
-def download_audio(audio_url, save_path):
-    """Download audio from a given URL."""
-    response = requests.get(audio_url)
-    with open(save_path, "wb") as file:
-        file.write(response.content)
-    return save_path
-
-
-def transcribe_audio(audio_path):
-    """Transcribe audio using Google's Speech Recognition."""
-    recognizer = sr.Recognizer()
-    if not audio_path.endswith(".wav"):
-        audio_path = convert_to_wav(audio_path)
-    with sr.AudioFile(audio_path) as source:
-        return recognizer.recognize_google(recognizer.record(source))
     
-
 def format_cnpj(cnpj):
     """Formata o CNPJ no formato 00.000.000/0000-00"""
     return f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"

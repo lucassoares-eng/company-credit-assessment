@@ -13,7 +13,8 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from unidecode import unidecode
 import urllib3
 from app.client import DriverManager
-from app.utils import download_audio, format_cnpj, transcribe_audio
+from app.recaptcha_solver import ReCAPTCHASolver
+from app.utils import format_cnpj
 
 # Desabilitar avisos de solicitações HTTPS não verificadas
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -25,6 +26,7 @@ INSTAGRAM_COOKIES_FILE = "instagram_cookies.pkl"
 INSTAGRAM_URL = "https://www.instagram.com"
 
 manager = DriverManager(INSTAGRAM_URL, INSTAGRAM_COOKIES_FILE)
+solver = ReCAPTCHASolver()
 
 # Function to fetch company data by CNPJ
 def fetch_cnpj_data(cnpj):
@@ -181,37 +183,6 @@ def is_logged_in():
         return user_button.is_displayed()
     except Exception:
         return False
-
-# Function to solve reCAPTCHA challenges
-def solve_recaptcha():
-    driver = manager.get_driver()
-
-    try:
-        wait = WebDriverWait(driver, 5)
-
-        iframe = wait.until(
-            EC.presence_of_element_located((By.XPATH, "//iframe[@title='o desafio reCAPTCHA expira em dois minutos']"))
-        )
-        driver.switch_to.frame(iframe)
-
-        audio_button = wait.until(EC.element_to_be_clickable((By.ID, "recaptcha-audio-button")))
-        audio_button.click()
-
-        audio_source = wait.until(EC.presence_of_element_located((By.ID, "audio-source"))).get_attribute("src")
-        audio_path = download_audio(audio_source, "recaptcha_audio.mp3")
-
-        response = transcribe_audio(audio_path)
-
-        audio_response_input = wait.until(EC.presence_of_element_located((By.ID, "audio-response")))
-        for char in response:
-            audio_response_input.send_keys(char)
-            time.sleep(random.uniform(0.1, 0.5))
-
-        verify_button = wait.until(EC.element_to_be_clickable((By.ID, "recaptcha-verify-button")))
-        verify_button.click()
-
-    except Exception as e:
-        raise RuntimeError(f"Error solving reCAPTCHA: {str(e)}")
     
 def check_recaptcha():
     driver = manager.get_driver()
@@ -300,8 +271,7 @@ def pesquisaprotesto_search_protests(cnpj):
             except:
                 print("\nResolving reCAPTCHA...")
                 try:
-                    solve_recaptcha()
-                    driver.switch_to.default_content()
+                    solver.solve_recaptcha(driver)
                     # Wait for the search results
                     wait = WebDriverWait(driver, 10)
                     result_text = wait.until(
