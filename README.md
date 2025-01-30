@@ -117,7 +117,7 @@ This module provides an automated way to solve Google reCAPTCHA challenges using
 - Works with Selenium and requires the driver with the reCAPTCHA iframe to be provided
 
 ### Usage
-```bash
+```python
 from selenium import webdriver
 from recaptcha_solver import ReCAPTCHASolver
 
@@ -147,18 +147,21 @@ GET /company-data?cnpj=12345678000195
 
 ## Requirements
 
-- Python 3.x
-- flask==3.0.3
-- flask-swagger-ui==4.11.1
-- requests==2.31.0
-- selenium==4.27.1
-- speechrecognition==3.14.0
-- pandas==2.1.1
-- python-dotenv==1.0.0
-- numpy==1.26.0
-- unidecode==1.3.8
-- urllib3==2.1.0
-- tqdm==4.66.1
+```plaintext
+Python 3.x
+flask==3.0.3
+flask-swagger-ui==4.11.1
+requests==2.31.0
+selenium==4.27.1
+speechrecognition==3.14.0
+pydub==0.25.1
+pandas==2.1.1
+python-dotenv==1.0.0
+numpy==1.26.0
+unidecode==1.3.8
+urllib3==2.1.0
+tqdm==4.66.1
+```
 
 ## How to Run the Project
 

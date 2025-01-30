@@ -9,3 +9,4 @@ pandas==2.1.1
 tqdm==4.66.1
 flask-swagger-ui==4.11.1
 flask==3.0.3
+pydub==0.25.1
