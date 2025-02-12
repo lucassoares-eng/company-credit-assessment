@@ -67,7 +67,8 @@ def get_chromedriver_url(version):
     """Get the download URL for the corresponding ChromeDriver version."""
     major_version = version.split('.')[0]
     response = requests.get(
-        "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"
+        "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json",
+        verify=False
     )
     if response.status_code == 200:
         data = response.json()

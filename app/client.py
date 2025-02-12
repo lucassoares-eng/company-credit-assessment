@@ -33,7 +33,7 @@ class DriverManager:
                     print(f"Error initializing driver: {e}")
                     self.driver.quit()
                     # Retry process from the beginning
-                    return self._setup_driver(self)
+                    return self._setup_driver()
             load_cookies(self.driver, self.instagram_cookies_file)
         else:
             self._prompt_login()
